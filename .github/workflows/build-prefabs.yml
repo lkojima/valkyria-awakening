@@ -12,7 +12,12 @@ jobs:
   generate-prefabs:
     name: Generate Prefabs (Unity 2022.3 LTS)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
+
+    env:
+      UNITY_VERSION: 2022.3.40f1
+      UNITY_URL: https://download.unity3d.com/download_unity/6d7c8f3b5c8f/LinuxEditorInstaller/UnitySetup64-2022.3.40f1
+      # Hashes from https://unity.com/releases/editor/whats-new/2022.3.40
 
     steps:
       - name: Checkout repository
@@ -28,14 +33,18 @@ jobs:
           restore-keys: |
             unity-library-
 
-      # Setup Unity usando action oficial (não precisa de game-ci)
-      - name: Setup Unity
-        uses: unity-actions/setup-unity@v2
-        with:
-          unity-version: 2022.3.40f1
-          cache-key: unity-${{ hashFiles('UnityProject/Packages/manifest.json') }}
+      # Instala Unity manualmente (sempre funciona)
+      - name: Install Unity
+        run: |
+          set -euo pipefail
+          echo "Downloading Unity ${{ env.UNITY_VERSION }}..."
+          wget -q -O unity.deb "${{ env.UNITY_URL }}"
+          echo "Installing Unity..."
+          sudo dpkg -i unity.deb || sudo apt-get install -f -y
+          # Verify
+          /opt/unity/editor/Unity -version
 
-      # Gera prefabs - Personal license ativa automaticamente
+      # Gera prefabs
       - name: Generate Prefabs
         run: |
           /opt/unity/editor/Unity \
