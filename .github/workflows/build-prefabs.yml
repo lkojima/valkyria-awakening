@@ -3,7 +3,7 @@ name: Generate Prefabs
 on:
   push:
     branches: [main, master]
-  workflow_dispatch:  # Permite rodar manualmente na aba Actions
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,13 +15,11 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      # Checkout do código
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
 
-      # Cache de biblioteca do Unity (acelera builds subsequentes)
       - name: Cache Unity Library
         uses: actions/cache@v4
         with:
@@ -30,23 +28,20 @@ jobs:
           restore-keys: |
             unity-library-
 
-      # Instala Unity 2022.3.51f1 (LTS)
+      # Instala Unity - usa versão estável disponível no game-ci
       - name: Install Unity
-        uses: game-ci/unity-installer@v2
+        uses: game-ci/unity-installer@v4
         with:
-          unityVersion: 2022.3.51f1
+          unityVersion: 2022.3.40f1
           cacheKey: unity-${{ hashFiles('UnityProject/Packages/manifest.json') }}
 
-      # Gera prefabs via script Editor
+      # Gera prefabs - Personal license ativa automaticamente (sem UNITY_LICENSE)
       - name: Generate Prefabs
-        uses: game-ci/unity-builder@v2
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        uses: game-ci/unity-builder@v4
         with:
           projectPath: UnityProject
           customParameters: -batchmode -executeMethod PrefabGenerator.GenerateAll -quit -logFile -
 
-      # Upload dos prefabs gerados como artefato
       - name: Upload Prefabs Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -55,7 +50,7 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
-      # Também faz commit automático dos prefabs no repo (opcional)
+      # Commit automático dos prefabs (opcional)
       - name: Commit Generated Prefabs
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
