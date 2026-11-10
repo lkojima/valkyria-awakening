@@ -1,0 +1,141 @@
+{
+  "prefabs": [
+    {
+      "name": "Enemy_Skeleton",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":1,\"b\":1,\"a\":1},\"flipX\":false,\"flipY\":false}"
+        },
+        {
+          "type": "BoxCollider2D",
+          "properties": "{\"size\":{\"x\":0.8,\"y\":1.6},\"offset\":{\"x\":0,\"y\":0},\"isTrigger\":false}"
+        },
+        {
+          "type": "Rigidbody2D",
+          "properties": "{\"bodyType\":1,\"gravityScale\":0,\"constraints\":2}"
+        },
+        {
+          "type": "EnemyController",
+          "properties": "{\"moveSpeed\":2.5,\"maxHealth\":30,\"damage\":10,\"attackRange\":1.2,\"attackCooldown\":1.5,\"detectionRange\":8,\"xpValue\":25}"
+        },
+        {
+          "type": "Animator",
+          "properties": "{}"
+        },
+        {
+          "type": "AudioSource",
+          "properties": "{\"spatialBlend\":1,\"volume\":0.7,\"rolloffMode\":1}"
+        }
+      ]
+    },
+    {
+      "name": "Enemy_Goblin",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":1,\"b\":1,\"a\":1}}"
+        },
+        {
+          "type": "BoxCollider2D",
+          "properties": "{\"size\":{\"x\":0.7,\"y\":1.4},\"isTrigger\":false}"
+        },
+        {
+          "type": "Rigidbody2D",
+          "properties": "{\"bodyType\":1,\"gravityScale\":0}"
+        },
+        {
+          "type": "EnemyController",
+          "properties": "{\"moveSpeed\":3.5,\"maxHealth\":20,\"damage\":8,\"attackRange\":1.0,\"attackCooldown\":1.0,\"detectionRange\":7,\"xpValue\":15}"
+        },
+        {
+          "type": "Animator",
+          "properties": "{}"
+        }
+      ]
+    },
+    {
+      "name": "Enemy_Orc",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":1,\"b\":1,\"a\":1}}"
+        },
+        {
+          "type": "BoxCollider2D",
+          "properties": "{\"size\":{\"x\":1.2,\"y\":2.0},\"isTrigger\":false}"
+        },
+        {
+          "type": "Rigidbody2D",
+          "properties": "{\"bodyType\":1,\"gravityScale\":0}"
+        },
+        {
+          "type": "EnemyController",
+          "properties": "{\"moveSpeed\":1.8,\"maxHealth\":80,\"damage\":25,\"attackRange\":1.8,\"attackCooldown\":2.5,\"detectionRange\":10,\"xpValue\":60}"
+        },
+        {
+          "type": "Animator",
+          "properties": "{}"
+        }
+      ]
+    },
+    {
+      "name": "Enemy_Slime",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":0.4,\"g\":0.8,\"b\":0.4,\"a\":1}}"
+        },
+        {
+          "type": "CircleCollider2D",
+          "properties": "{\"radius\":0.6,\"isTrigger\":false}"
+        },
+        {
+          "type": "Rigidbody2D",
+          "properties": "{\"bodyType\":1,\"gravityScale\":0}"
+        },
+        {
+          "type": "EnemyController",
+          "properties": "{\"moveSpeed\":2.0,\"maxHealth\":15,\"damage\":5,\"attackRange\":0.8,\"attackCooldown\":0.8,\"detectionRange\":5,\"xpValue\":10}"
+        },
+        {
+          "type": "Animator",
+          "properties": "{}"
+        }
+      ]
+    },
+    {
+      "name": "Enemy_Boss_Dragon",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":1,\"b\":1,\"a\":1}}"
+        },
+        {
+          "type": "PolygonCollider2D",
+          "properties": "{\"isTrigger\":false}"
+        },
+        {
+          "type": "Rigidbody2D",
+          "properties": "{\"bodyType\":1,\"gravityScale\":0}"
+        },
+        {
+          "type": "EnemyController",
+          "properties": "{\"moveSpeed\":2.5,\"maxHealth\":500,\"damage\":50,\"attackRange\":3.0,\"attackCooldown\":3.0,\"detectionRange\":15,\"xpValue\":500}"
+        },
+        {
+          "type": "BossAI",
+          "properties": "{\"phase2HealthPercent\":0.5,\"phase3HealthPercent\":0.2,\"specialAttackCooldown\":10}"
+        },
+        {
+          "type": "Animator",
+          "properties": "{}"
+        },
+        {
+          "type": "AudioSource",
+          "properties": "{\"spatialBlend\":1,\"volume\":1,\"rolloffMode\":1}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+# Unity
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+
+# MemoryCaches
+/MemoryCaches/
+
+# AssetBundles
+*.bundle
+*.manifest
+
+# Crash reports
+*.dmp
+*.mdmp
+
+# Visual Studio / VS Code
+.vs/
+*.sln
+*.csproj
+*.pidb
+*.suo
+*.user
+*.userprefs
+*.unityproj
+*.booproj
+
+# Rider
+.idea/
+*.sln.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Unity Package Manager
+Packages/manifest.json.lock
+Packages/packages-lock.json
+
+# Generated prefabs (opcional - descomente se quiser versionar)
+# /UnityProject/Assets/Prefabs/
+
+# Local settings
+/*.local

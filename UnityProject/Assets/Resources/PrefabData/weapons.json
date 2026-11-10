@@ -1,0 +1,106 @@
+{
+  "prefabs": [
+    {
+      "name": "Weapon_Sword_Basic",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":1,\"b\":1,\"a\":1}}"
+        },
+        {
+          "type": "BoxCollider2D",
+          "properties": "{\"size\":{\"x\":1.5,\"y\":0.3},\"isTrigger\":true}"
+        },
+        {
+          "type": "Weapon",
+          "properties": "{\"weaponName\":\"Espada Básica\",\"damage\":12,\"attackSpeed\":1.2,\"range\":1.5,\"knockback\":2,\"criticalChance\":0.05,\"criticalMultiplier\":1.5,\"weaponType\":0}"
+        }
+      ]
+    },
+    {
+      "name": "Weapon_Sword_Iron",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":0.8,\"g\":0.8,\"b\":0.9,\"a\":1}}"
+        },
+        {
+          "type": "BoxCollider2D",
+          "properties": "{\"size\":{\"x\":1.6,\"y\":0.35},\"isTrigger\":true}"
+        },
+        {
+          "type": "Weapon",
+          "properties": "{\"weaponName\":\"Espada de Ferro\",\"damage\":22,\"attackSpeed\":1.1,\"range\":1.6,\"knockback\":3,\"criticalChance\":0.1,\"criticalMultiplier\":1.7,\"weaponType\":0}"
+        }
+      ]
+    },
+    {
+      "name": "Weapon_Bow_Basic",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":1,\"b\":1,\"a\":1}}"
+        },
+        {
+          "type": "BoxCollider2D",
+          "properties": "{\"size\":{\"x\":1.2,\"y\":0.4},\"isTrigger\":true}"
+        },
+        {
+          "type": "Weapon",
+          "properties": "{\"weaponName\":\"Arco Simples\",\"damage\":10,\"attackSpeed\":0.8,\"range\":8,\"knockback\":1,\"criticalChance\":0.15,\"criticalMultiplier\":2,\"weaponType\":1,\"projectilePrefab\":\"Projectile_Arrow\"}"
+        }
+      ]
+    },
+    {
+      "name": "Weapon_Staff_Fire",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":0.4,\"b\":0.2,\"a\":1}}"
+        },
+        {
+          "type": "BoxCollider2D",
+          "properties": "{\"size\":{\"x\":0.5,\"y\":1.8},\"isTrigger\":true}"
+        },
+        {
+          "type": "Weapon",
+          "properties": "{\"weaponName\":\"Cajado de Fogo\",\"damage\":18,\"attackSpeed\":1.5,\"range\":6,\"knockback\":0,\"criticalChance\":0.1,\"criticalMultiplier\":1.8,\"weaponType\":2,\"projectilePrefab\":\"Projectile_Fireball\",\"manaCost\":5}"
+        }
+      ]
+    },
+    {
+      "name": "Weapon_Dagger_Poison",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":0.3,\"g\":0.6,\"b\":0.3,\"a\":1}}"
+        },
+        {
+          "type": "BoxCollider2D",
+          "properties": "{\"size\":{\"x\":0.8,\"y\":0.2},\"isTrigger\":true}"
+        },
+        {
+          "type": "Weapon",
+          "properties": "{\"weaponName\":\"Adaga Envenenada\",\"damage\":8,\"attackSpeed\":2.0,\"range\":1.0,\"knockback\":1,\"criticalChance\":0.25,\"criticalMultiplier\":2.5,\"weaponType\":0,\"applyPoison\":true,\"poisonDamage\":3,\"poisonDuration\":5}"
+        }
+      ]
+    },
+    {
+      "name": "Weapon_Axe_Heavy",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":0.5,\"g\":0.3,\"b\":0.2,\"a\":1}}"
+        },
+        {
+          "type": "BoxCollider2D",
+          "properties": "{\"size\":{\"x\":1.8,\"y\":0.6},\"isTrigger\":true}"
+        },
+        {
+          "type": "Weapon",
+          "properties": "{\"weaponName\":\"Machado Pesado\",\"damage\":35,\"attackSpeed\":0.6,\"range\":1.8,\"knockback\":6,\"criticalChance\":0.05,\"criticalMultiplier\":2,\"weaponType\":0,\"cleave\":true,\"cleaveAngle\":120}"
+        }
+      ]
+    }
+  ]
+}

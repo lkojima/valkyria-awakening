@@ -1,0 +1,73 @@
+name: Generate Prefabs
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:  # Permite rodar manualmente na aba Actions
+
+permissions:
+  contents: read
+
+jobs:
+  generate-prefabs:
+    name: Generate Prefabs (Unity 2022.3 LTS)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # Checkout do código
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      # Cache de biblioteca do Unity (acelera builds subsequentes)
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: UnityProject/Library
+          key: unity-library-${{ hashFiles('UnityProject/Packages/manifest.json', 'UnityProject/Packages/packages-lock.json') }}
+          restore-keys: |
+            unity-library-
+
+      # Instala Unity 2022.3.51f1 (LTS)
+      - name: Install Unity
+        uses: game-ci/unity-installer@v2
+        with:
+          unityVersion: 2022.3.51f1
+          cacheKey: unity-${{ hashFiles('UnityProject/Packages/manifest.json') }}
+
+      # Gera prefabs via script Editor
+      - name: Generate Prefabs
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: UnityProject
+          customParameters: -batchmode -executeMethod PrefabGenerator.GenerateAll -quit -logFile -
+
+      # Upload dos prefabs gerados como artefato
+      - name: Upload Prefabs Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: prefabs
+          path: UnityProject/Assets/Prefabs/
+          retention-days: 7
+          if-no-files-found: warn
+
+      # Também faz commit automático dos prefabs no repo (opcional)
+      - name: Commit Generated Prefabs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          cd UnityProject
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Assets/Prefabs/
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: auto-generate prefabs [skip ci]"
+            git push
+          else
+            echo "Nenhuma mudança nos prefabs"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

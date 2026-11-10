@@ -1,0 +1,140 @@
+{
+  "prefabs": [
+    {
+      "name": "Item_Health_Potion_Small",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":0.3,\"b\":0.3,\"a\":1}}"
+        },
+        {
+          "type": "CircleCollider2D",
+          "properties": "{\"radius\":0.3,\"isTrigger\":true}"
+        },
+        {
+          "type": "PickupItem",
+          "properties": "{\"itemName\":\"Poção de Cura Pequena\",\"itemType\":0,\"value\":25,\"maxStack\":10,\"description\":\"Restaura 25 de vida\",\"rarity\":0}"
+        }
+      ]
+    },
+    {
+      "name": "Item_Health_Potion_Large",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":0.2,\"b\":0.2,\"a\":1}}"
+        },
+        {
+          "type": "CircleCollider2D",
+          "properties": "{\"radius\":0.35,\"isTrigger\":true}"
+        },
+        {
+          "type": "PickupItem",
+          "properties": "{\"itemName\":\"Poção de Cura Grande\",\"itemType\":0,\"value\":75,\"maxStack\":5,\"description\":\"Restaura 75 de vida\",\"rarity\":1}"
+        }
+      ]
+    },
+    {
+      "name": "Item_Mana_Potion",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":0.3,\"g\":0.3,\"b\":1,\"a\":1}}"
+        },
+        {
+          "type": "CircleCollider2D",
+          "properties": "{\"radius\":0.3,\"isTrigger\":true}"
+        },
+        {
+          "type": "PickupItem",
+          "properties": "{\"itemName\":\"Poção de Mana\",\"itemType\":1,\"value\":30,\"maxStack\":10,\"description\":\"Restaura 30 de mana\",\"rarity\":0}"
+        }
+      ]
+    },
+    {
+      "name": "Item_Gold_Coin",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":0.85,\"b\":0,\"a\":1}}"
+        },
+        {
+          "type": "CircleCollider2D",
+          "properties": "{\"radius\":0.2,\"isTrigger\":true}"
+        },
+        {
+          "type": "PickupItem",
+          "properties": "{\"itemName\":\"Moeda de Ouro\",\"itemType\":2,\"value\":10,\"maxStack\":999,\"description\":\"Moeda comum\",\"rarity\":0}"
+        }
+      ]
+    },
+    {
+      "name": "Item_Gem_Red",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":1,\"g\":0.1,\"b\":0.1,\"a\":1}}"
+        },
+        {
+          "type": "CircleCollider2D",
+          "properties": "{\"radius\":0.25,\"isTrigger\":true}"
+        },
+        {
+          "type": "PickupItem",
+          "properties": "{\"itemName\":\"Gema Rubi\",\"itemType\":3,\"value\":100,\"maxStack\":20,\"description\":\"Gema vermelha brilhante\",\"rarity\":2}"
+        }
+      ]
+    },
+    {
+      "name": "Item_Gem_Blue",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":0.1,\"g\":0.3,\"b\":1,\"a\":1}}"
+        },
+        {
+          "type": "CircleCollider2D",
+          "properties": "{\"radius\":0.25,\"isTrigger\":true}"
+        },
+        {
+          "type": "PickupItem",
+          "properties": "{\"itemName\":\"Gema Safira\",\"itemType\":3,\"value\":100,\"maxStack\":20,\"description\":\"Gema azul profunda\",\"rarity\":2}"
+        }
+      ]
+    },
+    {
+      "name": "Item_XP_Orb_Small",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":0.5,\"g\":1,\"b\":0.5,\"a\":1}}"
+        },
+        {
+          "type": "CircleCollider2D",
+          "properties": "{\"radius\":0.2,\"isTrigger\":true}"
+        },
+        {
+          "type": "PickupItem",
+          "properties": "{\"itemName\":\"Orbe de XP Pequeno\",\"itemType\":4,\"value\":10,\"maxStack\":50,\"description\":\"Concede 10 XP\",\"rarity\":0}"
+        }
+      ]
+    },
+    {
+      "name": "Item_Key_Dungeon",
+      "components": [
+        {
+          "type": "SpriteRenderer",
+          "properties": "{\"color\":{\"r\":0.8,\"g\":0.6,\"b\":0.2,\"a\":1}}"
+        },
+        {
+          "type": "BoxCollider2D",
+          "properties": "{\"size\":{\"x\":0.4,\"y\":0.6},\"isTrigger\":true}"
+        },
+        {
+          "type": "PickupItem",
+          "properties": "{\"itemName\":\"Chave da Masmorra\",\"itemType\":5,\"value\":1,\"maxStack\":1,\"description\":\"Abre portas da masmorra\",\"rarity\":3}"
+        }
+      ]
+    }
+  ]
+}
