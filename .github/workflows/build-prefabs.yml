@@ -28,19 +28,23 @@ jobs:
           restore-keys: |
             unity-library-
 
-      # Instala Unity - usa versão estável disponível no game-ci
-      - name: Install Unity
-        uses: game-ci/unity-installer@v4
+      # Setup Unity usando action oficial (não precisa de game-ci)
+      - name: Setup Unity
+        uses: unity-actions/setup-unity@v2
         with:
-          unityVersion: 2022.3.40f1
-          cacheKey: unity-${{ hashFiles('UnityProject/Packages/manifest.json') }}
+          unity-version: 2022.3.40f1
+          cache-key: unity-${{ hashFiles('UnityProject/Packages/manifest.json') }}
 
-      # Gera prefabs - Personal license ativa automaticamente (sem UNITY_LICENSE)
+      # Gera prefabs - Personal license ativa automaticamente
       - name: Generate Prefabs
-        uses: game-ci/unity-builder@v4
-        with:
-          projectPath: UnityProject
-          customParameters: -batchmode -executeMethod PrefabGenerator.GenerateAll -quit -logFile -
+        run: |
+          /opt/unity/editor/Unity \
+            -batchmode \
+            -projectPath UnityProject \
+            -executeMethod PrefabGenerator.GenerateAll \
+            -quit \
+            -logFile - \
+            -nographics
 
       - name: Upload Prefabs Artifact
         uses: actions/upload-artifact@v4
@@ -50,7 +54,6 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
-      # Commit automático dos prefabs (opcional)
       - name: Commit Generated Prefabs
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
