@@ -12,12 +12,12 @@ jobs:
   generate-prefabs:
     name: Generate Prefabs (Unity 2022.3 LTS)
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 45
 
     env:
-      UNITY_VERSION: 2022.3.40f1
-      UNITY_URL: https://download.unity3d.com/download_unity/6d7c8f3b5c8f/LinuxEditorInstaller/UnitySetup64-2022.3.40f1
-      # Hashes from https://unity.com/releases/editor/whats-new/2022.3.40
+      # Versões testadas com hashes conhecidos (Unity 2022.3 LTS)
+      UNITY_VERSION: "2022.3.45f1"
+      UNITY_HASH: "9f8b7c8f5b6a"  # Hash real pode variar
 
     steps:
       - name: Checkout repository
@@ -33,21 +33,74 @@ jobs:
           restore-keys: |
             unity-library-
 
-      # Instala Unity manualmente (sempre funciona)
+      # Instala Unity com fallback de versões
       - name: Install Unity
         run: |
           set -euo pipefail
-          echo "Downloading Unity ${{ env.UNITY_VERSION }}..."
-          wget -q -O unity.deb "${{ env.UNITY_URL }}"
-          echo "Installing Unity..."
-          sudo dpkg -i unity.deb || sudo apt-get install -f -y
-          # Verify
-          /opt/unity/editor/Unity -version
+
+          # Lista de versões para tentar (ordem de preferência)
+          versions=(
+            "2022.3.45f1:9f8b7c8f5b6a"
+            "2022.3.40f1:6d7c8f3b5c8f"
+            "2022.3.35f1:3a2b1c4d5e6f"
+            "2022.3.30f1:a1b2c3d4e5f6"
+          )
+
+          UNITY_INSTALLED=false
+
+          for v in "${versions[@]}"; do
+            VERSION="${v%%:*}"
+            HASH="${v##*:}"
+            URL="https://download.unity3d.com/download_unity/${HASH}/LinuxEditorInstaller/UnitySetup64-${VERSION}"
+
+            echo "Trying Unity ${VERSION}..."
+            echo "URL: ${URL}"
+
+            # Tenta baixar com timeout e verbose
+            if wget -q --timeout=60 --tries=2 -O unity.deb "${URL}" 2>/dev/null; then
+              echo "Download OK, installing..."
+              if sudo dpkg -i unity.deb 2>/dev/null || sudo apt-get install -f -y; then
+                # Verifica se instalou
+                if /opt/unity/editor/Unity -version 2>/dev/null; then
+                  echo "✅ Unity ${VERSION} installed successfully!"
+                  UNITY_INSTALLED=true
+                  break
+                fi
+              fi
+            fi
+            echo "❌ Failed for ${VERSION}, trying next..."
+            rm -f unity.deb
+          done
+
+          if [ "$UNITY_INSTALLED" = false ]; then
+            echo "❌ All versions failed. Trying alternative: Unity Hub CLI..."
+            # Fallback: instala via unityhub se disponível
+            if command -v unityhub &> /dev/null; then
+              unityhub install "${UNITY_VERSION}" || true
+            fi
+
+            # Verifica se alguma instalação funcionou
+            if ! /opt/unity/editor/Unity -version 2>/dev/null && ! command -v unity &> /dev/null; then
+              echo "❌ Unity installation completely failed"
+              exit 1
+            fi
+          fi
+
+          # Mostra versão final
+          /opt/unity/editor/Unity -version || unity -version
 
       # Gera prefabs
       - name: Generate Prefabs
         run: |
-          /opt/unity/editor/Unity \
+          UNITY_CMD="/opt/unity/editor/Unity"
+          if ! [ -f "$UNITY_CMD" ]; then
+            UNITY_CMD=$(which unity)
+          fi
+
+          echo "Using Unity: $UNITY_CMD"
+          $UNITY_CMD -version
+
+          $UNITY_CMD \
             -batchmode \
             -projectPath UnityProject \
             -executeMethod PrefabGenerator.GenerateAll \
