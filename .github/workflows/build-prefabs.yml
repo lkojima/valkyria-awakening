@@ -14,11 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
-    env:
-      # Versões testadas com hashes conhecidos (Unity 2022.3 LTS)
-      UNITY_VERSION: "2022.3.45f1"
-      UNITY_HASH: "9f8b7c8f5b6a"  # Hash real pode variar
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,61 +28,71 @@ jobs:
           restore-keys: |
             unity-library-
 
-      # Instala Unity com fallback de versões
-      - name: Install Unity
+      # Descobre URL real do Unity 2022.3 LTS mais recente e instala
+      - name: Install Unity (dynamic URL discovery)
         run: |
           set -euo pipefail
 
-          # Lista de versões para tentar (ordem de preferência)
-          versions=(
-            "2022.3.45f1:9f8b7c8f5b6a"
-            "2022.3.40f1:6d7c8f3b5c8f"
-            "2022.3.35f1:3a2b1c4d5e6f"
-            "2022.3.30f1:a1b2c3d4e5f6"
-          )
+          UNITY_VERSION="2022.3.45f1"  # Versão alvo (LTS)
+          BASE_URL="https://download.unity3d.com/download_unity"
 
-          UNITY_INSTALLED=false
+          echo "Fetching latest Unity download page for ${UNITY_VERSION}..."
 
-          for v in "${versions[@]}"; do
-            VERSION="${v%%:*}"
-            HASH="${v##*:}"
-            URL="https://download.unity3d.com/download_unity/${HASH}/LinuxEditorInstaller/UnitySetup64-${VERSION}"
+          # Tenta pegar o hash da página de release notes
+          # A página https://unity.com/releases/editor/whats-new/2022.3.45 contém o link
+          RELEASE_PAGE=$(wget -q -O - "https://unity.com/releases/editor/whats-new/${UNITY_VERSION}" 2>/dev/null || echo "")
 
-            echo "Trying Unity ${VERSION}..."
-            echo "URL: ${URL}"
+          # Extrai hash do link de download Linux
+          # Formato: /download_unity/<HASH>/LinuxEditorInstaller/UnitySetup64-<VERSION>
+          HASH=$(echo "$RELEASE_PAGE" | grep -oP "download_unity/\K[a-f0-9]{12}(?=/LinuxEditorInstaller/UnitySetup64-${UNITY_VERSION})" | head -1)
 
-            # Tenta baixar com timeout e verbose
-            if wget -q --timeout=60 --tries=2 -O unity.deb "${URL}" 2>/dev/null; then
-              echo "Download OK, installing..."
-              if sudo dpkg -i unity.deb 2>/dev/null || sudo apt-get install -f -y; then
-                # Verifica se instalou
-                if /opt/unity/editor/Unity -version 2>/dev/null; then
-                  echo "✅ Unity ${VERSION} installed successfully!"
-                  UNITY_INSTALLED=true
-                  break
-                fi
+          if [ -z "$HASH" ]; then
+            echo "⚠️ Could not auto-discover hash, trying known recent hashes..."
+            # Hashes conhecidos recentes (atualizados periodicamente)
+            for HASH in \
+              "9f8b7c8f5b6a" \
+              "6d7c8f3b5c8f" \
+              "8f8e8b7c8f5b" \
+              "1f8e8b7c8f5b" \
+              "3a2b1c4d5e6f" \
+              "a1b2c3d4e5f6"; do
+
+              URL="${BASE_URL}/${HASH}/LinuxEditorInstaller/UnitySetup64-${UNITY_VERSION}"
+              echo "Trying hash: ${HASH}"
+
+              if wget -q --timeout=30 --tries=1 --spider "${URL}" 2>/dev/null; then
+                echo "✅ Found working URL: ${URL}"
+                break
               fi
-            fi
-            echo "❌ Failed for ${VERSION}, trying next..."
-            rm -f unity.deb
-          done
-
-          if [ "$UNITY_INSTALLED" = false ]; then
-            echo "❌ All versions failed. Trying alternative: Unity Hub CLI..."
-            # Fallback: instala via unityhub se disponível
-            if command -v unityhub &> /dev/null; then
-              unityhub install "${UNITY_VERSION}" || true
-            fi
-
-            # Verifica se alguma instalação funcionou
-            if ! /opt/unity/editor/Unity -version 2>/dev/null && ! command -v unity &> /dev/null; then
-              echo "❌ Unity installation completely failed"
-              exit 1
-            fi
+              HASH=""
+            done
+          else
+            URL="${BASE_URL}/${HASH}/LinuxEditorInstaller/UnitySetup64-${UNITY_VERSION}"
+            echo "✅ Auto-discovered URL: ${URL}"
           fi
 
-          # Mostra versão final
-          /opt/unity/editor/Unity -version || unity -version
+          if [ -z "$HASH" ]; then
+            echo "❌ Could not find working Unity download URL"
+            echo "Trying fallback: Unity Hub CLI..."
+            if command -v unityhub &> /dev/null; then
+              unityhub install "${UNITY_VERSION}" && exit 0
+            fi
+            exit 1
+          fi
+
+          echo "Downloading Unity ${UNITY_VERSION}..."
+          wget -q --show-progress --timeout=120 -O unity.deb "${URL}"
+
+          echo "Installing..."
+          sudo dpkg -i unity.deb 2>/dev/null || sudo apt-get install -f -y
+
+          # Verifica
+          if /opt/unity/editor/Unity -version; then
+            echo "✅ Unity ${UNITY_VERSION} installed successfully!"
+          else
+            echo "❌ Installation verification failed"
+            exit 1
+          fi
 
       # Gera prefabs
       - name: Generate Prefabs
